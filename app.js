@@ -14,6 +14,9 @@ app.set("view engine", "handlebars");
 app.get("/", function (req, res) {
   res.render("home");
 });
+app.get("/about", function (req, res) {
+  res.render("about");
+});
 
 // set static folder
 app.use(express.static(pathname));
