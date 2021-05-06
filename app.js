@@ -3,13 +3,18 @@ var exphbs = require("express-handlebars");
 const app = express();
 const path = require("path");
 const request = require("request");
+var bodyParser = require("body-parser");
 
 const PORT = process.env.PORT || 5000;
 const pathname = path.join(__dirname, "public");
 
-const getData = (stockData) => {
+app.use(bodyParser.urlencoded({ extended: false }));
+
+const getData = (stockData, query = "fb") => {
   request(
-    "https://cloud.iexapis.com/stable/stock/fb/quote?token=pk_ceaa65e7fce44e3d8c417d707ca0d5d6",
+    "https://cloud.iexapis.com/stable/stock/" +
+      query +
+      "/quote?token=pk_ceaa65e7fce44e3d8c417d707ca0d5d6",
     { json: true },
     (err, res, body) => {
       if (err) {
@@ -37,8 +42,20 @@ app.get("/", function (req, res) {
     });
   });
 });
+
 app.get("/about", function (req, res) {
   res.render("about");
+});
+
+// post route
+
+app.post("/", function (req, res) {
+  getData((data) => {
+    //query = req.body.keyword;
+    res.render("home", {
+      stockInfo: data,
+    });
+  }, req.body.keyword);
 });
 
 // set static folder
