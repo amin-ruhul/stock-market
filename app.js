@@ -5,7 +5,7 @@ const path = require("path");
 const request = require("request");
 var bodyParser = require("body-parser");
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 const pathname = path.join(__dirname, "public");
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -14,7 +14,8 @@ const getData = (stockData, query = "fb") => {
   request(
     "https://cloud.iexapis.com/stable/stock/" +
       query +
-      "/quote?token=pk_ceaa65e7fce44e3d8c417d707ca0d5d6",
+      "/quote?token=" +
+      process.env.API_KEY,
     { json: true },
     (err, res, body) => {
       if (err) {
@@ -22,7 +23,7 @@ const getData = (stockData, query = "fb") => {
       }
 
       if (res.statusCode === 200) {
-        console.log(body);
+        //console.log(body);
         //return body;
         stockData(body);
       }
